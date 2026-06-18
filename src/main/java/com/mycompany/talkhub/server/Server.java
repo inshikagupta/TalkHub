@@ -8,6 +8,6 @@ package com.mycompany.talkhub.server;
  *
  * @author shubham
  */
-public class server {
+public class Server {
     
 }
