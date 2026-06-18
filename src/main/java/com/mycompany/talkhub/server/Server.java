@@ -10,14 +10,14 @@ package com.mycompany.talkhub.server;
  */
 import java.net.*;
 import java.io.*;
-public class server {
+public class Server {
     ServerSocket serverSocket = null;
     Socket clientSocket = null;
 
     BufferedReader br = null;
     PrintWriter out = null;
 
-    public server() {
+    public Server() {
         try {
             serverSocket = new ServerSocket(12345);
             System.out.println("Server is listening on port 12345...");
@@ -77,6 +77,6 @@ public class server {
 
     public static void main(String[] args) {
         System.out.println("Server is running...");
-        new server();
+        new Server();
     }
 }
