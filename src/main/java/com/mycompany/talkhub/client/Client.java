@@ -11,12 +11,12 @@ package com.mycompany.talkhub.client;
 import java.net.*;
 import java.io.*;
 
-public class client {
+public class Client {
     Socket socket = null;
     BufferedReader br = null;
     PrintWriter out = null;
 
-    public client() {
+    public Client() {
         try {
             socket = new Socket("127.0.0.1", 12345);
             System.out.println("Connected to server: " + socket.getInetAddress().getHostAddress());
@@ -74,6 +74,6 @@ public class client {
 
     public static void main(String[] args) {
         System.out.println("Client is running...");
-        new client();
+        new Client();
     }
 }
