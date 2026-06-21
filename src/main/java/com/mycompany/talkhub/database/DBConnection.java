@@ -18,7 +18,7 @@ public class DBConnection {
             "jdbc:mysql://localhost:3306/talkhub";
 
     private static final String USER = "root";
-    private static final String PASSWORD = "inshika@123";
+    private static final String PASSWORD = "";
     
     
     public static Connection getConnection() throws SQLException {
