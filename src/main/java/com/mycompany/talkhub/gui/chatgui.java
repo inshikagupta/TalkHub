@@ -21,6 +21,7 @@ import java.awt.Image;
 
 
 public class ChatGUI extends JFrame {
+    private String username;
     public JLabel heading;
     public JTextArea messageArea;
     public JTextField messageInput;
@@ -28,7 +29,12 @@ public class ChatGUI extends JFrame {
     Font font = new Font("Roboto", Font.PLAIN, 20);
     
     public ChatGUI() {
-
+        this("TalkHub");
+    }
+    
+    public ChatGUI(String username) {
+        this.username = username;
+        
         createGUI();
 
         setVisible(true);
@@ -41,7 +47,7 @@ public class ChatGUI extends JFrame {
         return messageInput;
     }
     private void createGUI(){
-        heading = new JLabel("Client Area");
+        heading = new JLabel(username);
         messageArea = new JTextArea();
         messageInput = new JTextField();
         DefaultCaret caret =

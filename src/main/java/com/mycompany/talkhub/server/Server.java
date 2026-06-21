@@ -36,8 +36,6 @@ public class Server {
             
             handleEvents();
             startReading();
-            
-//            startWriting();
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -92,27 +90,6 @@ public class Server {
         Thread readThread = new Thread(r1);
         readThread.start();
     }
-
-//    public void startWriting() {
-//        Runnable r2 = () -> {
-//            System.out.println("Writer started...");
-//            BufferedReader br1 = new BufferedReader(new InputStreamReader(System.in));
-//            while (!clientSocket.isClosed()) {
-//                try {
-//                    String content = br1.readLine();
-//                    out.println(content);
-//                    if (content.equals("exit")) {
-//                        clientSocket.close();
-//                        break;
-//                    }
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        };
-//        Thread writeThread = new Thread(r2);
-//        writeThread.start();
-//    }
 
     public static void main(String[] args) {
         System.out.println("Server is running...");
