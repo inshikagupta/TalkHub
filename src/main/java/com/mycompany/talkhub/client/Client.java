@@ -18,100 +18,85 @@ import java.io.PrintWriter;
 import java.io.IOException;
 
 public class Client {
+    private String username;
+    private Socket socket;
+    private BufferedReader br;
+    private PrintWriter out;
+    private ChatGUI gui;
 
-    Socket socket = null;
-    BufferedReader br = null;
-    PrintWriter out = null;
-    ChatGUI gui;
- 
-    public Client() {
-        
+    public Client(String username, ChatGUI gui) {
+        this.username = username;
+        this.gui = gui;
+
         try {
             socket = new Socket("127.0.0.1", 12345);
-            System.out.println("Connected to server: " + socket.getInetAddress().getHostAddress());
+            System.out.println("Connected to server: " + socket.getInetAddress());
+
             br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             out = new PrintWriter(socket.getOutputStream(), true);
-            
-            gui = new ChatGUI();
-            gui.heading.setText("TalkHub Client");
-            
+            out.println("USERNAME:" + username);
+            gui.heading.setText(username);
+
             handleEvents();
             startReading();
-//            startWriting();
+
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-    private void handleEvents(){
+
+    // Send message to server
+    private void handleEvents() {
         gui.getMessageInput().addActionListener(e -> {
 
             String msg = gui.getMessageInput().getText();
 
-            if(msg.trim().isEmpty())
+            if (msg.trim().isEmpty())
                 return;
 
-            out.println(msg);
+            String receiver = gui.getSelectedUser();
+            if(receiver == null){
+                gui.getMessageArea()
+                   .append("Select a user first\n");
+                return;
+            }
+
+            out.println(
+                "MSG:" +
+                receiver +
+                ":" +
+                msg
+            );
             gui.getMessageArea().append("Me : " + msg + "\n");
 
             gui.getMessageInput().setText("");
 
-            if(msg.equalsIgnoreCase("exit")) {
+            if (msg.equalsIgnoreCase("exit")) {
                 try {
                     socket.close();
-                } catch(IOException ex) {
+                } catch (IOException ex) {
                     ex.printStackTrace();
                 }
             }
         });
     }
+
+    // Read messages from server
     public void startReading() {
+
         Runnable r1 = () -> {
-            System.out.println("Reader started...");
             try {
-                while (true) {
-                    String msg = br.readLine();
-                    if(msg==null)
-                        break;
-                    
-                    if (msg.equals("exit")) {
-                        System.out.println("Client terminated the chat");
-                        socket.close();
-                        break;
-                    }
-                    gui.getMessageArea().append("Server : " + msg + "\n");
+                String msg;
+
+                while ((msg = br.readLine()) != null) {
+                    gui.getMessageArea().append(msg + "\n");
                 }
+
             } catch (Exception e) {
-                // e.printStackTrace();
                 System.out.println("Connection closed");
             }
         };
-        Thread readThread = new Thread(r1);
-        readThread.start();
-    }
 
-//    public void startWriting() {
-//        Runnable r2 = () -> {
-//            System.out.println("Writer started...");
-//            try {
-//                while (!socket.isClosed()) {
-//                    BufferedReader br1 = new BufferedReader(new InputStreamReader(System.in));
-//                    String content = br1.readLine();
-//                    out.println(content);
-//                    if (content.equals("exit")) {
-//                        socket.close();
-//                        break;
-//                    }
-//                }
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//        };
-//        Thread writeThread = new Thread(r2);
-//        writeThread.start();
-//    }
-
-    public static void main(String[] args) {
-        System.out.println("Client is running...");
-        new Client();
+        new Thread(r1).start();
     }
 }
