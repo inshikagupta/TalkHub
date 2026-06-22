@@ -4,7 +4,6 @@
  */
 package com.mycompany.talkhub.gui;
 
-import com.mycompany.talkhub.client.Client;
 import com.mycompany.talkhub.database.UserAction;
 import java.awt.BorderLayout;
 import java.awt.Font;
@@ -18,6 +17,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+import com.mycompany.talkhub.model.User;
 
 /**
  *
@@ -80,6 +80,8 @@ public class RegistrationGUI extends JFrame implements ActionListener {
 
         setVisible(true);
     }
+    
+    @Override
     public void actionPerformed(ActionEvent e) {
 
         if (e.getSource() == registerButton) {
@@ -114,25 +116,18 @@ public class RegistrationGUI extends JFrame implements ActionListener {
 
             UserAction act = new UserAction();
 
-            boolean success =
-                    act.registerUser(username, password);
+            User user = new User(username, password);
+            boolean success = act.registerUser(user);
 
             if(success){
-
                 JOptionPane.showMessageDialog(
                         this,
                         "Registration Successful!"
                 );
-
-                ChatGUI gui = new ChatGUI();
-                gui.setVisible(true);
-
-                new Client(username, gui);
-
+                new LoginGUI();
                 dispose();
 
             }else{
-
                 JOptionPane.showMessageDialog(
                         this,
                         "Registration Failed!"
@@ -146,7 +141,4 @@ public class RegistrationGUI extends JFrame implements ActionListener {
             dispose();
         }
     }
-    public static void main(String[] args) {
-        new RegistrationGUI();
-    }  
 }

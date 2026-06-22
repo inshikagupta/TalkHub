@@ -18,7 +18,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
-
+import com.mycompany.talkhub.model.User;
 /**
  *
  * @author inshika
@@ -27,8 +27,6 @@ import javax.swing.JTextField;
 public class LoginGUI extends JFrame implements ActionListener {
 
     private JLabel titleLabel;
-    private JLabel usernameLabel;
-    private JLabel passwordLabel;
 
     private JTextField usernameField;
     private JPasswordField passwordField;
@@ -37,7 +35,6 @@ public class LoginGUI extends JFrame implements ActionListener {
     private JButton registerButton;
 
     public LoginGUI() {
-
        setTitle("TalkHub Login");
         setSize(400, 250);
         setLocationRelativeTo(null);
@@ -81,14 +78,11 @@ public class LoginGUI extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-
          if (e.getSource() == loginButton) {
-
             String username = usernameField.getText().trim();
             String password = String.valueOf(passwordField.getPassword());
 
             if (username.isEmpty() || password.isEmpty()) {
-
                 JOptionPane.showMessageDialog(
                         this,
                         "Please enter username and password."
@@ -97,16 +91,16 @@ public class LoginGUI extends JFrame implements ActionListener {
             }
             UserAction act = new UserAction();
 
-            boolean success = act.loginUser(username, password);
+            User user = new User(username, password);
+            boolean success = act.loginUser(user);
 
             if (success) {
-
                 JOptionPane.showMessageDialog(
                         this,
                         "Login Successful!"
                 );
 
-                ChatGUI gui = new ChatGUI();
+                ChatGUI gui = new ChatGUI(username);
                 gui.setVisible(true);
 
                 new Client(username, gui);
@@ -114,27 +108,16 @@ public class LoginGUI extends JFrame implements ActionListener {
                 dispose();
 
             } else {
-
                 JOptionPane.showMessageDialog(
                         this,
                         "Invalid Username or Password!"
                 );
             }
-                        //jdbc loin logic
         }
 
         if (e.getSource() == registerButton) {
-
-            JOptionPane.showMessageDialog(
-                    this,
-                    "Open Register Window"
-            );
-
-            // new RegisterGUI();
+            new RegistrationGUI().setVisible(true);
+                this.dispose();
         }
-    }
-
-    public static void main(String[] args) {
-        new LoginGUI();
     }
 }

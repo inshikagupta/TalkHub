@@ -34,7 +34,7 @@ public class Client {
 
             br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             out = new PrintWriter(socket.getOutputStream(), true);
-
+            out.println("USERNAME:" + username);
             gui.heading.setText(username);
 
             handleEvents();
@@ -51,10 +51,22 @@ public class Client {
 
             String msg = gui.getMessageInput().getText();
 
-            if (msg == null || msg.trim().isEmpty())
+            if (msg.trim().isEmpty())
                 return;
 
-            out.println(username + " : " + msg);
+            String receiver = gui.getSelectedUser();
+            if(receiver == null){
+                gui.getMessageArea()
+                   .append("Select a user first\n");
+                return;
+            }
+
+            out.println(
+                "MSG:" +
+                receiver +
+                ":" +
+                msg
+            );
             gui.getMessageArea().append("Me : " + msg + "\n");
 
             gui.getMessageInput().setText("");
@@ -77,13 +89,6 @@ public class Client {
                 String msg;
 
                 while ((msg = br.readLine()) != null) {
-
-                    if (msg.equalsIgnoreCase("exit")) {
-                        System.out.println("Server closed connection");
-                        socket.close();
-                        break;
-                    }
-
                     gui.getMessageArea().append(msg + "\n");
                 }
 
